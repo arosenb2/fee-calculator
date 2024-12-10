@@ -47,6 +47,7 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
   const targetAmount = parseFloat(targetInput.value) || 0;
   const percentageFee = parseFloat(percentageInput.value) || DEFAULT_PERCENTAGE_FEE;
   const fixedFee = parseFloat(fixedInput.value) || DEFAULT_FIXED_FEE;
+  const breakdownDetails = document.querySelector("details");
 
   // Update query parameters
   setQueryParams({
@@ -62,6 +63,7 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
     const totalFeePercentage = ((adjustedAmount / targetAmount) - 1) * 100;
 
     resultDiv.textContent = `Amount to Charge Customer: $${adjustedAmount.toFixed(2)}`;
+    breakdownDetails.style.display = "block";
 
     breakdownDiv.innerHTML = `
       <div class="text-gray-700 dark:text-gray-300">
@@ -73,6 +75,7 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
   } else {
     resultDiv.textContent = ""; // Clear result if no target amount
     breakdownDiv.innerHTML = "";
+    breakdownDetails.style.display = "none";
   }
 }
 
