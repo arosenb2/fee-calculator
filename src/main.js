@@ -82,8 +82,8 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
 // Initialize theme
 function initializeTheme() {
   const savedTheme = getCookie("theme") || "system";
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const themeToggle = document.getElementById("themeToggle");
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const sunIcon = document.getElementById("sunIcon");
   const moonIcon = document.getElementById("moonIcon");
   const systemIcon = document.getElementById("systemIcon");
@@ -110,13 +110,15 @@ function initializeTheme() {
     }
   };
 
-  const applyTheme = (theme) => {
+  const applyTheme = (theme, systemPreference = null) => {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
 
     let effectiveTheme = theme;
     if (theme === "system") {
-      effectiveTheme = prefersDark ? "dark" : "light";
+      // Use provided systemPreference if available, otherwise check media query
+      const isDark = systemPreference !== null ? systemPreference : mediaQuery.matches;
+      effectiveTheme = isDark ? "dark" : "light";
     }
 
     if (effectiveTheme === 'dark') {
@@ -125,10 +127,17 @@ function initializeTheme() {
 
     setCookie("theme", theme);
     updateIcons(theme);
+
+    // Dispatch custom event for theme changes
+    window.dispatchEvent(new CustomEvent('themeChanged', {
+      detail: { theme, effectiveTheme }
+    }));
   };
 
+  // Initial theme application
   applyTheme(savedTheme);
 
+  // Theme toggle click handler
   themeToggle.addEventListener("click", () => {
     const currentTheme = getCookie("theme") || "system";
     const themes = ["light", "dark", "system"];
@@ -137,12 +146,12 @@ function initializeTheme() {
     applyTheme(nextTheme);
   });
 
-  window.matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      if (getCookie("theme") === "system") {
-        applyTheme("system");
-      }
-    });
+  // System preference change handler
+  mediaQuery.addEventListener("change", (e) => {
+    // Always reapply the current theme with the new system preference
+    const currentTheme = getCookie("theme") || "system";
+    applyTheme(currentTheme, e.matches);
+  });
 }
 
 // Initialize form and settings
