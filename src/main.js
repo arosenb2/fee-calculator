@@ -2,15 +2,15 @@ import './styles/tailwind.css';
 
 // Default fee configuration
 const DEFAULT_PERCENTAGE_FEE = 2.9; // 2.9%
-const DEFAULT_FIXED_FEE = 0.30; // $0.30
+const DEFAULT_FIXED_FEE = 0.3; // $0.30
 
 // Helper: Parse query parameters
 function getQueryParams() {
   const params = new URLSearchParams(window.location.search);
   return {
-    percentageFee: parseFloat(params.get("percentageFee")) || DEFAULT_PERCENTAGE_FEE,
-    fixedFee: parseFloat(params.get("fixedFee")) || DEFAULT_FIXED_FEE,
-    targetAmount: parseFloat(params.get("targetAmount")) || "",
+    percentageFee: parseFloat(params.get('percentageFee')) || DEFAULT_PERCENTAGE_FEE,
+    fixedFee: parseFloat(params.get('fixedFee')) || DEFAULT_FIXED_FEE,
+    targetAmount: parseFloat(params.get('targetAmount')) || '',
   };
 }
 
@@ -18,13 +18,13 @@ function getQueryParams() {
 function setQueryParams(params) {
   const url = new URL(window.location);
   Object.keys(params).forEach((key) => {
-    if (params[key] !== null && params[key] !== undefined && params[key] !== "") {
+    if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
       url.searchParams.set(key, params[key]);
     } else {
       url.searchParams.delete(key);
     }
   });
-  window.history.replaceState({}, "", url);
+  window.history.replaceState({}, '', url);
 }
 
 // Helper: Get and set cookies
@@ -39,7 +39,7 @@ function setCookie(name, value, days = 365) {
 
 // Calculate total amount including fees
 function calculateTotal(target, percentageFee, fixedFee) {
-  return Math.ceil((target + fixedFee) / (1 - percentageFee / 100) * 100) / 100;
+  return Math.ceil(((target + fixedFee) / (1 - percentageFee / 100)) * 100) / 100;
 }
 
 // Update the live result
@@ -47,7 +47,7 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
   const targetAmount = parseFloat(targetInput.value) || 0;
   const percentageFee = parseFloat(percentageInput.value) || DEFAULT_PERCENTAGE_FEE;
   const fixedFee = parseFloat(fixedInput.value) || DEFAULT_FIXED_FEE;
-  const breakdownDetails = document.querySelector("details");
+  const breakdownDetails = document.querySelector('details');
 
   // Update query parameters
   setQueryParams({
@@ -60,10 +60,10 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
   if (targetAmount > 0) {
     const adjustedAmount = calculateTotal(targetAmount, percentageFee, fixedFee);
     const totalFee = adjustedAmount - targetAmount;
-    const totalFeePercentage = ((adjustedAmount / targetAmount) - 1) * 100;
+    const totalFeePercentage = (adjustedAmount / targetAmount - 1) * 100;
 
     resultDiv.textContent = `Amount to Charge Customer: $${adjustedAmount.toFixed(2)}`;
-    breakdownDetails.style.display = "block";
+    breakdownDetails.style.display = 'block';
 
     breakdownDiv.innerHTML = `
       <div class="text-gray-700 dark:text-gray-300">
@@ -73,39 +73,39 @@ function updateResult(targetInput, percentageInput, fixedInput, resultDiv, break
       </div>
     `;
   } else {
-    resultDiv.textContent = ""; // Clear result if no target amount
-    breakdownDiv.innerHTML = "";
-    breakdownDetails.style.display = "none";
+    resultDiv.textContent = ''; // Clear result if no target amount
+    breakdownDiv.innerHTML = '';
+    breakdownDetails.style.display = 'none';
   }
 }
 
 // Initialize theme
 function initializeTheme() {
-  const savedTheme = getCookie("theme") || "system";
-  const themeToggle = document.getElementById("themeToggle");
-  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  const sunIcon = document.getElementById("sunIcon");
-  const moonIcon = document.getElementById("moonIcon");
-  const systemIcon = document.getElementById("systemIcon");
+  const savedTheme = getCookie('theme') || 'system';
+  const themeToggle = document.getElementById('themeToggle');
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+  const systemIcon = document.getElementById('systemIcon');
 
   const updateIcons = (currentTheme) => {
-    sunIcon.classList.add("hidden");
-    moonIcon.classList.add("hidden");
-    systemIcon.classList.add("hidden");
+    sunIcon.classList.add('hidden');
+    moonIcon.classList.add('hidden');
+    systemIcon.classList.add('hidden');
 
     // Show icon for the next theme in the cycle
-    switch(currentTheme) {
-      case "light":
+    switch (currentTheme) {
+      case 'light':
         // If we're in light mode, show dark mode icon
-        sunIcon.classList.remove("hidden");
+        sunIcon.classList.remove('hidden');
         break;
-      case "dark":
+      case 'dark':
         // If we're in dark mode, show system icon
-        systemIcon.classList.remove("hidden");
+        systemIcon.classList.remove('hidden');
         break;
-      case "system":
+      case 'system':
         // If we're in system mode, show light mode icon
-        moonIcon.classList.remove("hidden");
+        moonIcon.classList.remove('hidden');
         break;
     }
   };
@@ -115,41 +115,43 @@ function initializeTheme() {
     root.classList.remove('light', 'dark');
 
     let effectiveTheme = theme;
-    if (theme === "system") {
+    if (theme === 'system') {
       // Use provided systemPreference if available, otherwise check media query
       const isDark = systemPreference !== null ? systemPreference : mediaQuery.matches;
-      effectiveTheme = isDark ? "dark" : "light";
+      effectiveTheme = isDark ? 'dark' : 'light';
     }
 
     if (effectiveTheme === 'dark') {
       root.classList.add('dark');
     }
 
-    setCookie("theme", theme);
+    setCookie('theme', theme);
     updateIcons(theme);
 
     // Dispatch custom event for theme changes
-    window.dispatchEvent(new CustomEvent('themeChanged', {
-      detail: { theme, effectiveTheme }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('themeChanged', {
+        detail: { theme, effectiveTheme },
+      })
+    );
   };
 
   // Initial theme application
   applyTheme(savedTheme);
 
   // Theme toggle click handler
-  themeToggle.addEventListener("click", () => {
-    const currentTheme = getCookie("theme") || "system";
-    const themes = ["light", "dark", "system"];
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = getCookie('theme') || 'system';
+    const themes = ['light', 'dark', 'system'];
     const currentIndex = themes.indexOf(currentTheme);
     const nextTheme = themes[(currentIndex + 1) % themes.length];
     applyTheme(nextTheme);
   });
 
   // System preference change handler
-  mediaQuery.addEventListener("change", (e) => {
+  mediaQuery.addEventListener('change', (e) => {
     // Always reapply the current theme with the new system preference
-    const currentTheme = getCookie("theme") || "system";
+    const currentTheme = getCookie('theme') || 'system';
     applyTheme(currentTheme, e.matches);
   });
 }
@@ -158,20 +160,20 @@ function initializeTheme() {
 function initializeForm() {
   const params = getQueryParams();
 
-  const targetInput = document.getElementById("targetAmount");
-  const percentageInput = document.getElementById("percentageFee");
-  const fixedInput = document.getElementById("fixedFee");
-  const resultDiv = document.getElementById("result");
-  const breakdownDiv = document.getElementById("breakdown");
+  const targetInput = document.getElementById('targetAmount');
+  const percentageInput = document.getElementById('percentageFee');
+  const fixedInput = document.getElementById('fixedFee');
+  const resultDiv = document.getElementById('result');
+  const breakdownDiv = document.getElementById('breakdown');
 
   // Set inputs from query params
-  targetInput.value = params.targetAmount || "";
+  targetInput.value = params.targetAmount || '';
   percentageInput.value = params.percentageFee;
   fixedInput.value = params.fixedFee;
 
   // Add live preview update listeners
   [targetInput, percentageInput, fixedInput].forEach((input) => {
-    input.addEventListener("input", () =>
+    input.addEventListener('input', () =>
       updateResult(targetInput, percentageInput, fixedInput, resultDiv, breakdownDiv)
     );
   });
