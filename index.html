@@ -25,23 +25,75 @@
     <div class="space-y-4">
       <div>
         <label for="targetAmount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Target Amount ($)</label>
-        <input type="number" id="targetAmount" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm" step="0.01" />
+        <div class="relative mt-1">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">$</span>
+          <input
+            type="number"
+            inputmode="decimal"
+            pattern="[0-9]*"
+            id="targetAmount"
+            name="targetAmount"
+            aria-label="Enter target amount in dollars"
+            aria-describedby="targetAmountHint"
+            class="pl-7 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+          />
+        </div>
+        <p id="targetAmountHint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the amount you want to receive after fees</p>
       </div>
-      <div id="result" class="mt-4 text-center text-lg font-bold text-gray-900 dark:text-gray-100"></div>
+
+      <div id="result" class="mt-4 text-center text-lg font-bold text-gray-900 dark:text-gray-100" aria-live="polite"></div>
+
       <details class="mt-4">
-        <summary class="cursor-pointer text-blue-500 dark:text-blue-400">Show Breakdown</summary>
-        <div id="breakdown" class="mt-2"></div>
+        <summary class="cursor-pointer text-blue-500 dark:text-blue-400" aria-label="Show fee breakdown details">Show Breakdown</summary>
+        <div id="breakdown" class="mt-2" aria-label="Fee breakdown details"></div>
       </details>
+
       <details class="mt-4">
-        <summary class="cursor-pointer text-blue-500 dark:text-blue-400">Advanced Settings</summary>
+        <summary class="cursor-pointer text-blue-500 dark:text-blue-400" aria-label="Show advanced settings">Advanced Settings</summary>
         <div class="mt-2 space-y-4">
           <div>
             <label for="percentageFee" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Percentage Fee (%)</label>
-            <input type="number" id="percentageFee" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm" step="0.01" />
+            <div class="relative mt-1">
+              <input
+                type="number"
+                inputmode="decimal"
+                pattern="[0-9]*"
+                id="percentageFee"
+                name="percentageFee"
+                aria-label="Enter percentage fee"
+                aria-describedby="percentageFeeHint"
+                class="pr-7 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+              />
+              <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-500">%</span>
+            </div>
+            <p id="percentageFeeHint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the percentage fee charged by the payment processor</p>
           </div>
+
           <div>
             <label for="fixedFee" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fixed Fee ($)</label>
-            <input type="number" id="fixedFee" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm" step="0.01" />
+            <div class="relative mt-1">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">$</span>
+              <input
+                type="number"
+                inputmode="decimal"
+                pattern="[0-9]*"
+                id="fixedFee"
+                name="fixedFee"
+                aria-label="Enter fixed fee in dollars"
+                aria-describedby="fixedFeeHint"
+                class="pl-7 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+              />
+            </div>
+            <p id="fixedFeeHint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the fixed fee charged by the payment processor</p>
           </div>
         </div>
       </details>
